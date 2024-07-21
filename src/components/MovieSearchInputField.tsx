@@ -1,7 +1,8 @@
 import { Box, InputBase, Typography, alpha, styled } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { IMovieSearchInputFieldProps } from "../dataTypes";
+import useKey from "../hooks/useKey";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -50,18 +51,7 @@ const MovieSearchInputField: React.FC<IMovieSearchInputFieldProps> = ({
 }) => {
   const inputFieldRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const callback = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        inputFieldRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", callback);
-
-    return () => {
-      window.removeEventListener("keydown", callback);
-    };
-  }, []);
+  useKey("Enter", () => inputFieldRef.current?.focus());
 
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>

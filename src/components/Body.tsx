@@ -7,29 +7,13 @@ import StyledCard from "./StyledCard";
 import PersonalRating from "./PersonalRating";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
-
-// a function that saves the watchedList to local storage
-const persistWatchedList = (watchedList: IMovie[]) => {
-  localStorage.setItem("watchedList", JSON.stringify(watchedList));
-};
-
-// a function that loads watchedList from local storage and returns it
-const loadWatchedList = (): IMovie[] => {
-  return JSON.parse(localStorage.getItem("watchedList") || "[]");
-};
-
-const persistRatings = (ratings: IRatings[]) => {
-  localStorage.setItem("ratings", JSON.stringify(ratings));
-};
-
-const loadRatings = (): IRatings[] => {
-  return JSON.parse(localStorage.getItem("ratings") || "[]");
-};
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const Body: React.FC<IBodyProps> = ({ searchResults, movieSearchLoading }) => {
-  const [watchedList, setWatchedList] = useState<IMovie[]>(loadWatchedList);
-  const [watchedListRating, setWatchedListRating] = useState<IRatings[]>(loadRatings);
-  let watchedListAvgRating = watchedListRating.reduce((acc, curr) => acc + curr.rating, 0) / watchedListRating.length;
+  const [watchedList, setWatchedList] = useLocalStorage("watchedList", []);
+  const [watchedListRating, setWatchedListRating] = useLocalStorage("ratings", []);
+  let watchedListAvgRating =
+    watchedListRating.reduce((acc: number, curr: IRatings) => acc + curr.rating, 0) / watchedListRating.length;
 
   const [selectedMovie, setSelectedMovie] = useState<IMovie | undefined>(undefined);
   const [snackbar, setSnackbar] = React.useState<boolean>(false);
@@ -41,17 +25,12 @@ const Body: React.FC<IBodyProps> = ({ searchResults, movieSearchLoading }) => {
   };
 
   useEffect(() => {
-    persistRatings(watchedListRating);
-  }, [watchedListRating]);
-
-  useEffect(() => {
     if (watchedList.length > 0) {
       setAlertSeverity("success");
       setSnackbarMessage("Watch List updated!");
       setSnackbar((prev) => !prev);
       setSelectedMovie(undefined);
     }
-    persistWatchedList(watchedList);
   }, [watchedList]);
 
   const handleMovieClick = (movie: IMovie) => {
@@ -60,15 +39,15 @@ const Body: React.FC<IBodyProps> = ({ searchResults, movieSearchLoading }) => {
 
   const handleAddMovie = (movie: IMovie, ratingValue: number) => {
     // Check if the movie already exists in watchedList
-    if (!watchedList.some((m) => m.imdbID === movie.imdbID)) {
+    if (!watchedList.some((m: IMovie) => m.imdbID === movie.imdbID)) {
       // Calculate the new average rating
-      const sum = watchedListRating.reduce((acc, curr) => acc + curr.rating, 0) + ratingValue;
+      const sum = watchedListRating.reduce((acc: number, curr: IRatings) => acc + curr.rating, 0) + ratingValue;
       const newRating = sum / (watchedListRating.length + 1);
 
       // Update watchedListRating, watchedListAvgRating, watchedList and persist to local storage
       watchedListAvgRating = newRating;
-      setWatchedListRating((prevRating) => [...prevRating, { rating: ratingValue, imdbID: movie.imdbID }]);
-      setWatchedList((prevWatchedList) => [...prevWatchedList, movie]);
+      setWatchedListRating((prevRating: IRatings[]) => [...prevRating, { rating: ratingValue, imdbID: movie.imdbID }]);
+      setWatchedList((prevWatchedList: IMovie[]) => [...prevWatchedList, movie]);
     } else {
       // Movie already exists in the list
       setAlertSeverity("warning");
@@ -79,9 +58,10 @@ const Body: React.FC<IBodyProps> = ({ searchResults, movieSearchLoading }) => {
 
   const handleRemoveMovie = (imdbID: string) => {
     // Remove the movie from watchedList and update watchedListRating, watchedListAvgRating
-    setWatchedList((prevWatchedList) => prevWatchedList.filter((m) => m.imdbID !== imdbID));
-    setWatchedListRating((prevRating) => prevRating.filter((m) => m.imdbID !== imdbID));
-    watchedListAvgRating = watchedListRating.reduce((acc, curr) => acc + curr.rating, 0) / watchedListRating.length;
+    setWatchedList((prevWatchedList: IMovie[]) => prevWatchedList.filter((m) => m.imdbID !== imdbID));
+    setWatchedListRating((prevRating: IRatings[]) => prevRating.filter((m) => m.imdbID !== imdbID));
+    watchedListAvgRating =
+      watchedListRating.reduce((acc: number, curr: IRatings) => acc + curr.rating, 0) / watchedListRating.length;
   };
 
   return (

@@ -4,6 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import MyAnimatedComponent from "./MyAnimatedComponent";
 import { IPersonalRatingProps } from "../dataTypes";
+import useKey from "../hooks/useKey";
 
 export const PersonalRating: React.FC<IPersonalRatingProps> = ({ selectedMovie, setSelectedMovie, handleAddMovie }) => {
   const [ratingValue, setRatingValue] = useState<number>(0);
@@ -15,6 +16,8 @@ export const PersonalRating: React.FC<IPersonalRatingProps> = ({ selectedMovie, 
     setRatingValue(value as number);
   };
 
+  useKey("Escape", () => setSelectedMovie(undefined));
+
   useEffect(() => {
     document.title = selectedMovie?.Title || "Popcorn";
 
@@ -22,20 +25,6 @@ export const PersonalRating: React.FC<IPersonalRatingProps> = ({ selectedMovie, 
       document.title = "Popcorn";
     };
   }, [selectedMovie]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setSelectedMovie(undefined);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [setSelectedMovie]);
 
   return (
     <MyAnimatedComponent>

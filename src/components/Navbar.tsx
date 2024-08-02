@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import popcornIcon from "../icons/popcorn-icon.png";
+import popcornIcon from "../assets/popcorn-icon.png";
 import { INavbarProps } from "../dataTypes";
 import MyAnimatedComponent from "./MyAnimatedComponent";
 
@@ -21,7 +21,7 @@ const Navbar: React.FC<INavbarProps> = ({ searchResults, movieSearchLoading, set
 
   return (
     <MyAnimatedComponent>
-      <Box sx={{ flexGrow: 1, margin: 1 }}>
+      <Box sx={{ flexGrow: 1, padding: 1 }}>
         <StyledAppBar position="static">
           <Toolbar sx={{ justifyContent: "space-between" }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>

@@ -17,6 +17,7 @@
     "@types/react-dom": "^18.2.25",
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
+    "framer-motion": "^11.3.21",
     "node-fetch": "^2.7.0",
     "omdbapi": "^4.0.0",
     "react": "^18.2.0",

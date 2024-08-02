@@ -8,6 +8,7 @@ import { useState } from "react";
 import Navbar from "./components/Navbar";
 import { CssBaseline } from "@mui/material";
 import useMovies from "./hooks/useMovies";
+import Background from "./components/Background";
 
 const ColorModeContext = createContext({ App: () => {} });
 
@@ -18,7 +19,7 @@ function MyApp() {
     useMovies();
 
   return (
-    <>
+    <Background>
       <Navbar
         searchQuery={searchQuery}
         searchResults={searchResults}
@@ -36,7 +37,7 @@ function MyApp() {
         movieSearchLoading={movieSearchLoading}
         setMovieSearchLoading={setMovieSearchLoading}
       />
-    </>
+    </Background>
   );
 }
 
